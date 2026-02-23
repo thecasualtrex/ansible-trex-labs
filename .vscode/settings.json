@@ -1,3 +1,17 @@
 {
-    "ansible.python.interpreterPath": "/bin/python"
+    "ansible.python.interpreterPath": "/bin/python",
+    "cSpell.words": [
+        "adguardhome",
+        "bantime",
+        "createusers",
+        "findtime",
+        "geerlingguy",
+        "jellyfin",
+        "jellyfinserver",
+        "maxretry",
+        "nologin",
+        "nvjacobo",
+        "plexserver",
+        "ryandaniels"
+    ]
 }

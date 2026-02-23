@@ -8,16 +8,16 @@
      ansible.builtin.debug:
        msg: Hello world
 
-- name: Install Docker
-  hosts: Test
-  roles:
-    -  geerlingguy.pip
-    -  geerlingguy.docker
-  vars:
-   docker_users:
-    - root
-   pip_install_packages:
-    - name:
-        - packaging
-        - docker
+- name: Mount SMB Share
+  hosts: all
   become: true
+  vars:
+    src_uri: "//windows-pc/share"
+    smb_username: "example@domain"
+    smb_password: "password"
+    mountpoint: "/share"
+  tasks:
+    - name: utility present
+      ansible.builtin.package:
+        name: cifs-utils
+        state: present

@@ -15,3 +15,5 @@ roles:
   - name: geerlingguy.docker
   - name: geerlingguy.pip
   - name: nvjacobo.caddy
+  # Role: Install Go
+  - name: geerlingguy.go

@@ -1,0 +1,54 @@
+- name: Ensure required packages are installed
+  ansible.builtin.package:
+    name:
+      - curl
+      - tar
+    state: present
+    update_cache: yes
+
+- name: Create AdGuardHome group
+  group:
+    name: "{{ adguardhome_group }}"
+    system: yes
+
+- name: Create AdGuardHome user
+  user:
+    name: "{{ adguardhome_user }}"
+    group: "{{ adguardhome_group }}"
+    system: yes
+    shell: /usr/sbin/nologin
+    create_home: no
+
+- name: Download AdGuardHome release
+  get_url:
+    url: "https://static.adguard.com/adguardhome/release/AdGuardHome_linux_amd64.tar.gz"
+    dest: "/tmp/AdGuardHome.tar.gz"
+    mode: '0644'
+
+- name: Extract AdGuardHome into /opt
+  unarchive:
+    src: "/tmp/AdGuardHome.tar.gz"
+    dest: "/opt"
+    remote_src: yes
+    creates: "/opt/AdGuardHome/AdGuardHome"
+
+- name: Set ownership
+  file:
+    path: "/opt/AdGuardHome"
+    recurse: yes
+    owner: "{{ adguardhome_user }}"
+    group: "{{ adguardhome_group }}"
+
+- name: Install systemd service
+  template:
+    src: "adguardhome.service.j2"
+    dest: "/etc/systemd/system/adguardhome.service"
+    mode: '0644'
+  notify:
+    - Reload systemd
+
+- name: Enable and start AdGuardHome
+  systemd:
+    name: adguardhome
+    enabled: yes
+    state: started

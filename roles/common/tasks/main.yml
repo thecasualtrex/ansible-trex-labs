@@ -19,10 +19,10 @@
       - curl
       - ufw
       - htop
-      - samba
       - unzip
       - zip
       - git
+      - tar
     state: latest
 
 - name: Install Fedora specific packages
@@ -38,9 +38,9 @@
     state: latest
   when: ansible_facts['os_family'] == "RedHat"
 
-
 - name: Copy custom profile script
   ansible.builtin.copy:
-    src: ./templates/motd.sh 
+    src: ./templates/motd.sh
     dest: /etc/profile.d/motd.sh
     mode: '0644'
+  when: enable_custom_profile_script | bool

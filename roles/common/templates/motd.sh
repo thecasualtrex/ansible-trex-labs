@@ -1,23 +1,43 @@
 #!/bin/bash
-#
-# /etc/update-motd.d/10-custom-info
-# This script displays custom system information
 
-# Gather System Information
-WHO=$(who | awk '{print $1}' | sort | uniq | tr '\n' ' ')
-CPU=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
-DISK=$(df -h / | awk 'NR==2 {print $5}')
-RAM=$(free -m | awk 'NR==2 {printf "%.1f%%", $3/$2*100}')
+# Colors
+RED="\e[31m"
+GREEN="\e[32m"
+YELLOW="\e[33m"
+BLUE="\e[34m"
+CYAN="\e[36m"
+WHITE="\e[97m"
+RESET="\e[0m"
+
+# Variables
+HOSTNAME=$(hostname)
+OS=$(grep PRETTY_NAME /etc/os-release | cut -d '"' -f2)
+KERNEL=$(uname -r)
 UPTIME=$(uptime -p)
+LOAD=$(cat /proc/loadavg | awk '{print $1 " " $2 " " $3}')
+MEM_TOTAL=$(free -m | awk '/Mem:/ {print $2}')
+MEM_USED=$(free -m | awk '/Mem:/ {print $3}')
+MEM_AVAILABLE=$(free -m | awk '/Mem:/ {print $7}')
+DISK_USAGE=$(df -h / | awk 'NR==2 {print $3 " / " $2 " (" $5 ")"}')
+IP=$(hostname -I | awk '{print $1}')
+USERS=$(who | wc -l)
+DATE=$(date "+%A, %d %B %Y - %H:%M:%S")
 
+clear
 
-# Display Welcome Message
+echo -e "${GREEN}Hostname:${RESET}    $HOSTNAME"
+echo -e "${GREEN}System:${RESET}      $OS"
+echo -e "${GREEN}Kernel:${RESET}      $KERNEL"
+echo -e "${GREEN}Uptime:${RESET}      $UPTIME"
+echo -e "${GREEN}Load Avg:${RESET}    $LOAD"
+
 echo ""
-echo "Welcome to $(hostname)!"
-echo "=================================="
-echo "System Uptime: $UPTIME"
-echo "Logged in users: $WHO"
-echo "CPU Usage: $CPU%"
-echo "Disk Usage (/): $DISK"
-echo "RAM Usage: $RAM"
-echo "=================================="
+echo -e "${YELLOW}Memory:${RESET}      ${MEM_USED} MiB used / ${MEM_TOTAL} MiB total (${MEM_AVAILABLE} MiB available)"
+echo -e "${YELLOW}Disk (/):${RESET} $DISK_USAGE"
+
+echo ""
+echo -e "${BLUE}IP Address:${RESET}  $IP"
+echo -e "${BLUE}Users Logged In:${RESET} $USERS"
+
+echo ""
+echo -e "${WHITE}$DATE${RESET}"

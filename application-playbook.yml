@@ -1,51 +1,17 @@
 ---
-- name: Ping Test
-  hosts: all
-  tasks:
-   - name: Ping my hosts
-     ansible.builtin.ping:
-  tags:
-    - ping-test
-
-- name: Installing Updates & Common Packages
+- name: Install AdGuard
   hosts: all
   roles:
-   - common
-  become: true
-  tags:
-    - common
-
-- name: Create User(s)
-  hosts: all
-  roles:
-   - ryandaniels.create_users
-  vars_files:
-   - ./useradd
-  become: true
-  tags:
-    - createusers
-
-# Make sure to have git install, I didn't do it here incase this needs to be run as a non-root user.
-- name: Installing dotfiles
-  hosts: all
-  roles:
-   - geerlingguy.dotfiles
+    - adguard
   vars:
-   dotfiles_repo: "https://github.com/Terell-Davis/dotfiles.git"
-   dotfiles_repo_version: master
-   dotfiles_repo_local_destination: "~/Documents/dotfiles"
-   dotfiles_home: "~"
-   dotfiles_files:
-    - .aliases
-    - .bash_profile
-    - .bash_prompt
-    - .exports
-    - .bashrc
+    adguardhome_user: "adguard"
+    adguardhome_group: "adguard"
+  become: true
   tags:
-    - dotfiles
+    - adguard
 
 - name: Install Docker
-  hosts: docker
+  hosts: all
   roles:
     -  geerlingguy.pip
     -  geerlingguy.docker
@@ -59,20 +25,8 @@
   tags:
     - docker
 
-- name: Setup ufw
-  hosts: secure
-  roles:
-   - ufw
-  vars:
-   ports:
-    - 80
-    - 443
-  become: true
-  tags:
-    - ufw
-
 - name: Install Caddy Webserver
-  hosts: web
+  hosts: all
   roles:
    - nvjacobo.caddy
   vars:

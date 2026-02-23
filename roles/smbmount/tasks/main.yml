@@ -1,0 +1,17 @@
+---
+- name: check mountpoint exist
+  ansible.builtin.file:
+    path: "{{ mountpoint }}"
+    state: directory
+    mode: '0775'
+    owner: root
+    group: arcana
+
+- name: Mount network share
+  ansible.posix.mount:
+    src: "{{ src_uri }}"
+    path: "{{ mountpoint }}"
+    fstype: cifs
+    opts: 'username={{ smb_username }},password={{ smb_password }}'
+    state: mounted
+
