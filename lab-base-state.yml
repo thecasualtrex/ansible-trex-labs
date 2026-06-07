@@ -1,0 +1,19 @@
+---
+- name: Ping Test
+  hosts: all
+  tasks:
+   - name: Pings host
+     ansible.builtin.ping:
+  tags:
+    - ping
+
+- name: Setup ufw
+  hosts: all
+  roles:
+   - ufw
+  vars:
+   ports:
+    - 22
+  become: true
+  tags:
+    - ufw

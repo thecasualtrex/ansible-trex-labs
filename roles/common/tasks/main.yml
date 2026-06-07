@@ -43,4 +43,4 @@
     src: ./templates/motd.sh
     dest: /etc/profile.d/motd.sh
     mode: '0644'
-  when: enable_custom_profile_script | bool
+  when: enable_custom_motd | bool

@@ -1,17 +1,10 @@
----
-- name: Ping Test
-  hosts: all
-  tasks:
-   - name: Pings host
-     ansible.builtin.ping:
-  tags:
-    - ping
-
 - name: Installing Updates & Common Packages
   hosts: all
   roles:
    - common
   become: true
+  vars:
+    enable_custom_motd: true
   tags:
     - common
 
@@ -43,21 +36,3 @@
     - .bashrc
   tags:
     - dotfiles
-
-- name: Setup ufw
-  hosts: all
-  roles:
-   - ufw
-  vars:
-   ports:
-    - 22
-  become: true
-  tags:
-    - ufw
-
-- name: Install goLang
-  hosts: all
-  roles:
-    - geerlingguy.go
-  tags:
-    - golang

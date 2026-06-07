@@ -36,6 +36,13 @@
   tags:
     - caddy
 
+- name: Install goLang
+  hosts: all
+  roles:
+    - geerlingguy.go
+  tags:
+    - golang
+
 - name: Install Plex Server
   hosts: plexserver
   roles:
